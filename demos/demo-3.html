@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo 3 - CRT Effects - glitchGL - NaughtyDuk©</title>
+    <meta
+      name="description"
+      content="Experience authentic CRT monitor emulation with glitchGL. Features scanlines, phosphor glow, screen curvature, and chromatic aberration with interactive mouse-driven effects."
+    />
+    <meta
+      name="keywords"
+      content="glitchGL, WebGL, CRT effects, scanlines, phosphor glow, curvature, retro display, javascript, interactive, naughtyduk"
+    />
+    <meta name="author" content="NaughtyDuk" />
+    <link rel="canonical" href="https://glitchgl.naughtyduk.com/demos/demo-3" />
+    <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+    <meta
+      property="og:title"
+      content="Demo 3 - CRT Effects - glitchGL - NaughtyDuk©"
+    />
+    <meta
+      property="og:description"
+      content="Experience authentic CRT monitor emulation with glitchGL. Features scanlines, phosphor glow, screen curvature, and chromatic aberration with interactive mouse-driven effects."
+    />
+    <meta
+      property="og:image"
+      content="https://glitchgl.naughtyduk.com/assets/glitchGL-Meta-IMG.jpg"
+    />
+    <meta
+      property="og:url"
+      content="https://glitchgl.naughtyduk.com/demos/demo-3"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Demo 3 - CRT Effects - glitchGL - NaughtyDuk©"
+    />
+    <meta
+      name="twitter:description"
+      content="Experience authentic CRT monitor emulation with glitchGL. Features scanlines, phosphor glow, screen curvature, and chromatic aberration with interactive mouse-driven effects."
+    />
+    <meta
+      name="twitter:image"
+      content="https://glitchgl.naughtyduk.com/assets/glitchGL-Meta-IMG.jpg"
+    />
+
+    <!-- === DEMO ONLY - STYLES === -->
+    <style>
+      @font-face {
+        font-family: "ProtoMono";
+        src: url("../assets/ProtoMono-Regular.woff2") format("woff2");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      .lil-gui {
+        --focus-color: #333;
+        --number-color: #f5f5f5;
+      }
+      body {
+        margin: 0;
+        background-color: #1a1a1a;
+        color: #f5f5f5;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        overflow: hidden;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .global-nav {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 10000;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+
+      .nav-container {
+        background: rgb(9 9 11 / 85%);
+        backdrop-filter: blur(16px);
+        border-radius: 12px;
+        border: 0.5px solid #1e1e20;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+      }
+
+      .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: transparent;
+        border: none;
+        color: #fafafa;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        width: 100%;
+        text-align: left;
+        transition: all 0.2s ease;
+      }
+
+      .nav-toggle:hover {
+        background: rgb(39 39 42 / 50%);
+      }
+
+      .nav-toggle svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .nav-container.expanded .nav-toggle svg {
+        transform: rotate(180deg);
+      }
+
+      .nav-menu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .nav-container.expanded .nav-menu {
+        max-height: 300px;
+      }
+
+      .nav-item {
+        display: block;
+        padding: 10px 16px;
+        color: #a1a1aa;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 400;
+        transition: all 0.2s ease;
+        border-top: 0.5px solid #1e1e20;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .nav-item:hover {
+        background: rgb(39 39 42 / 50%);
+        color: #fafafa;
+      }
+
+      .nav-item.active {
+        color: #fafafa;
+        background: rgb(39 39 42 / 30%);
+      }
+
+      .nav-item.active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #fafafa;
+      }
+
+      @media (max-width: 768px) {
+        .global-nav {
+          top: 0.5rem;
+          left: 0.5rem;
+        }
+
+        .nav-toggle {
+          padding: 10px 14px;
+          font-size: 13px;
+        }
+
+        .nav-item {
+          padding: 8px 14px;
+          font-size: 12px;
+        }
+      }
+
+      .gradient-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100dvh;
+        background: linear-gradient(to top, #f44336 0%, transparent 100%);
+        z-index: 2;
+        pointer-events: none;
+        mix-blend-mode: darken;
+      }
+
+      .text-overlay-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100dvh;
+        mix-blend-mode: difference;
+        z-index: 3;
+      }
+
+      .text-main {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        max-width: 100%;
+        z-index: 3;
+        pointer-events: none;
+        font-family: "ProtoMono", monospace;
+        font-size: 3rem;
+        font-weight: 900;
+        text-align: center;
+        line-height: 0.85;
+        color: #ffffff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        letter-spacing: 0.02em;
+        background: transparent;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1.5rem;
+        border-bottom: none;
+        z-index: 50; /* Behind lil-gui (1000) and dropdowns */
+        font-family: "ProtoMono", monospace;
+        font-size: 12px;
+        color: #bababa;
+        box-sizing: border-box;
+        mix-blend-mode: difference;
+      }
+
+      @media screen and (max-width: 768px) {
+        .header-logo {
+          display: none;
+        }
+      }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+      }
+
+      .header-left,
+      .header-center,
+      .header-right {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+      }
+
+      .header-left {
+        text-align: left;
+      }
+
+      .header-center {
+        text-align: center;
+      }
+
+      .header-right {
+        text-align: right;
+      }
+
+      .header-logo {
+        width: 70px;
+        height: auto;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+      }
+
+      .header-logo:hover {
+        opacity: 1;
+      }
+
+      .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+        border-top: none;
+        z-index: 100;
+        font-family: "ProtoMono", monospace;
+        font-size: 12px;
+        color: #bababa;
+        box-sizing: border-box;
+        mix-blend-mode: difference;
+      }
+
+      .footer-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+      }
+
+      .footer-left,
+      .footer-center,
+      .footer-right {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+      }
+
+      .footer-left {
+        text-align: left;
+      }
+
+      .footer-center {
+        text-align: center;
+      }
+
+      .footer-right {
+        text-align: right;
+      }
+
+      .footer-right a {
+        color: #bababa;
+        text-decoration: none;
+      }
+
+      @media (max-width: 768px) {
+        .footer {
+          padding: 8px 12px;
+          font-size: 10px;
+        }
+
+        .footer-container {
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .footer-left,
+        .footer-center,
+        .footer-right {
+          text-align: center;
+        }
+      }
+
+      /* Tooltip Styles */
+      .lil-gui-tooltip {
+        position: absolute;
+        background-color: rgba(20, 20, 20, 0.9);
+        backdrop-filter: blur(10px);
+        color: #f0f0f0;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 100001;
+        pointer-events: none;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        transition: opacity 0.2s ease, transform 0.2s ease,
+          visibility 0s linear 0.2s;
+        opacity: 0;
+        transform: translateY(5px) translateX(-50%);
+        visibility: hidden;
+        white-space: nowrap;
+        font-weight: 700;
+      }
+
+      .lil-gui-tooltip.visible {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+        transition-delay: 0s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- === DEMO ONLY - PAGE CONTENT === -->
+    <nav class="global-nav">
+      <div class="nav-container">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-label="Toggle navigation menu"
+        >
+          <span>Demos</span>
+          <svg viewBox="0 0 16 16">
+            <path d="M8 11L3 6h10l-5 5z" />
+          </svg>
+        </button>
+        <div class="nav-menu">
+          <a href="../index.html" class="nav-item">Index</a>
+          <a href="demo-1.html" class="nav-item">D1 - Digital Glitch</a>
+          <a href="demo-2.html" class="nav-item">D2 - Multiple</a>
+          <a href="demo-3.html" class="nav-item active">D3 - CRT Effects</a>
+          <a href="demo-4.html" class="nav-item">D4 - Pixelation</a>
+          <a href="demo-5.html" class="nav-item">D5 - 3D</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header with logo -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-left"></div>
+        <div class="header-center">
+          <img
+            src="../assets/ND25-White-Logo.svg"
+            alt="NaughtyDuk Labs"
+            class="header-logo"
+          />
+        </div>
+        <div class="header-right"></div>
+      </div>
+    </header>
+
+    <video
+      class="video glitchGL"
+      autoplay
+      loop
+      muted
+      playsinline
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100dvh;
+        object-fit: cover;
+        z-index: 1;
+      "
+    >
+      <source src="../assets/ufo.mp4" type="video/mp4" />
+    </video>
+
+    <div class="gradient-overlay"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/dist/lil-gui.umd.min.js"></script>
+    <script src="../scripts/glitchGL.min.js"></script>
+
+    <!-- === GLITCHGL === -->
+    <script>
+      let glitchEffect;
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        await document.fonts.load('normal 900 3rem "ProtoMono"');
+        await document.fonts.ready;
+
+        setTimeout(() => {
+          initializeGlitchGL();
+        }, 100);
+      });
+
+      function initializeGlitchGL() {
+        if (typeof glitchGL === "undefined") {
+          console.error("glitchGL library not found.");
+          return;
+        }
+
+        glitchEffect = glitchGL({
+          target: ".glitchGL",
+          mouseRadius: 0.3,
+          intensity: 1.9,
+          interaction: {
+            enabled: true,
+            shape: "diamond",
+            customUrl: "../assets/ND25-White-Logo.svg",
+            customSize: "40vw",
+            effects: {
+              pixelation: [],
+              crt: ["chromaticAberration", "phosphorGlow"],
+              glitch: [],
+            },
+          },
+          effects: {
+            pixelation: {
+              enabled: false,
+            },
+            crt: {
+              enabled: true,
+              preset: "broadcast-monitor",
+              scanlineIntensity: 0.59,
+            },
+            glitch: {
+              enabled: false,
+            },
+          },
+          on: {
+            init: function (instance) {
+              console.log("glitchGL CRT demo initialized!", instance);
+            },
+          },
+        });
+      }
+
+      window.addEventListener("beforeunload", () => {
+        if (glitchEffect && typeof glitchEffect.cleanup === "function") {
+          glitchEffect.cleanup();
+        }
+      });
+    </script>
+
+    <!-- === DEMO ONLY - NAVIGATION, VIDEO PLAYER, GUI === -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Navigation functionality
+        const navToggle = document.querySelector(".nav-toggle");
+        const navContainer = document.querySelector(".nav-container");
+
+        if (navToggle && navContainer) {
+          navToggle.addEventListener("click", () => {
+            const isExpanded = navContainer.classList.contains("expanded");
+            navContainer.classList.toggle("expanded");
+            navToggle.setAttribute("aria-expanded", !isExpanded);
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!navContainer.contains(e.target)) {
+              navContainer.classList.remove("expanded");
+              navToggle.setAttribute("aria-expanded", "false");
+            }
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (
+              e.key === "Escape" &&
+              navContainer.classList.contains("expanded")
+            ) {
+              navContainer.classList.remove("expanded");
+              navToggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        }
+
+        // GUI Controls
+        const setupGUI = () => {
+          if (typeof lil !== "undefined" && glitchEffect) {
+            const gui = new lil.GUI({ closeFolders: true });
+            const controls = glitchEffect.options;
+
+            // Global Settings
+            const globalFolder = gui.addFolder("Global Settings");
+
+            globalFolder
+              .add(controls, "intensity", 0, 5, 0.1)
+              .name("intensity")
+              .onChange((value) => {
+                glitchEffect.updateOptions({ intensity: value });
+              });
+
+            // Interaction System (sub folder of Global Settings)
+            const interactionFolder =
+              globalFolder.addFolder("Interaction System");
+            const interaction = controls.interaction || {};
+
+            interactionFolder
+              .add(interaction, "enabled")
+              .name("enabled")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  interaction: { enabled: value },
+                });
+              });
+
+            interactionFolder
+              .add(interaction, "shape", {
+                Circle: "circle",
+                Square: "square",
+                Diamond: "diamond",
+                Cross: "cross",
+                Plus: "plus",
+                Custom: "custom",
+              })
+              .name("shape")
+              .onChange((value) => {
+                const updateOptions = { shape: value };
+                if (value === "custom") {
+                  updateOptions.customUrl =
+                    interaction.customUrl || "../assets/ND25-White-Logo.svg";
+                }
+                glitchEffect.updateOptions({
+                  interaction: updateOptions,
+                });
+              });
+
+            interactionFolder
+              .add(interaction, "customSize")
+              .name("customSize")
+              .onFinishChange((value) => {
+                glitchEffect.updateOptions({
+                  interaction: { customSize: value },
+                });
+              });
+
+            interactionFolder
+              .add(interaction, "customUrl")
+              .name("customUrl")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  interaction: { shape: "custom", customUrl: value },
+                });
+              });
+
+            interactionFolder
+              .add(interaction, "velocity")
+              .name("velocity")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  interaction: { velocity: value },
+                });
+              });
+
+            // Pixelation Effects (Subfolder of Interaction System)
+            const pixelInteractionFolder =
+              interactionFolder.addFolder("Pixelation Effects");
+            const pixelEffects = ["pixelSize"];
+            const pixelLabels = {
+              pixelSize: "Pixel Size",
+            };
+
+            const pixelInteractionState = {};
+            pixelEffects.forEach((effect) => {
+              pixelInteractionState[effect] = (
+                interaction.effects?.pixelation || []
+              ).includes(effect);
+              pixelInteractionFolder
+                .add(pixelInteractionState, effect)
+                .name(pixelLabels[effect])
+                .onChange(() => {
+                  const enabledPixelEffects = Object.keys(
+                    pixelInteractionState
+                  ).filter((key) => pixelInteractionState[key]);
+                  glitchEffect.updateOptions({
+                    interaction: {
+                      effects: { pixelation: enabledPixelEffects },
+                    },
+                  });
+                });
+            });
+
+            // CRT Effects (Subfolder of Interaction System)
+            const crtInteractionFolder =
+              interactionFolder.addFolder("CRT Effects");
+            const crtEffects = [
+              "chromaticAberration",
+              "scanlines",
+              "phosphorGlow",
+              "curvature",
+            ];
+            const crtLabels = {
+              chromaticAberration: "Chromatic Aberration",
+              scanlines: "Scanlines",
+              phosphorGlow: "Phosphor Glow",
+              curvature: "Curvature",
+            };
+
+            const crtInteractionState = {};
+            crtEffects.forEach((effect) => {
+              crtInteractionState[effect] = (
+                interaction.effects?.crt || []
+              ).includes(effect);
+              crtInteractionFolder
+                .add(crtInteractionState, effect)
+                .name(crtLabels[effect])
+                .onChange(() => {
+                  const enabledCrtEffects = Object.keys(
+                    crtInteractionState
+                  ).filter((key) => crtInteractionState[key]);
+                  glitchEffect.updateOptions({
+                    interaction: { effects: { crt: enabledCrtEffects } },
+                  });
+                });
+            });
+
+            // Glitch Effects (Subfolder of Interaction System)
+            const glitchInteractionFolder =
+              interactionFolder.addFolder("Glitch Effects");
+            const glitchEffects = [
+              "rgbShift",
+              "digitalNoise",
+              "lineDisplacement",
+              "bitCrushing",
+              "signalDropout",
+              "syncErrors",
+              "interferenceLines",
+              "frameGhosting",
+              "stutterFreeze",
+              "datamoshing",
+            ];
+            const glitchLabels = {
+              rgbShift: "RGB Shift",
+              digitalNoise: "Digital Noise",
+              lineDisplacement: "Line Displacement",
+              bitCrushing: "Bit Crushing",
+              signalDropout: "Signal Dropout",
+              syncErrors: "Sync Errors",
+              interferenceLines: "Interference Lines",
+              frameGhosting: "Frame Ghosting",
+              stutterFreeze: "Stutter/Freeze",
+              datamoshing: "Datamoshing",
+            };
+
+            const glitchInteractionState = {};
+            glitchEffects.forEach((effect) => {
+              glitchInteractionState[effect] = (
+                interaction.effects?.glitch || []
+              ).includes(effect);
+              glitchInteractionFolder
+                .add(glitchInteractionState, effect)
+                .name(glitchLabels[effect])
+                .onChange(() => {
+                  const enabledGlitchEffects = Object.keys(
+                    glitchInteractionState
+                  ).filter((key) => glitchInteractionState[key]);
+                  glitchEffect.updateOptions({
+                    interaction: { effects: { glitch: enabledGlitchEffects } },
+                  });
+                });
+            });
+
+            // Pixelation Effect
+            const pixelationFolder = gui.addFolder("Pixelation Effect");
+
+            pixelationFolder
+              .add(controls.effects.pixelation, "enabled")
+              .name("enabled")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { pixelation: { enabled: value } },
+                });
+              });
+
+            pixelationFolder
+              .add(controls.effects.pixelation, "pixelSize", 1, 64, 1)
+              .name("pixelSize")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { pixelation: { pixelSize: value } },
+                });
+              });
+
+            pixelationFolder
+              .add(controls.effects.pixelation, "pixelShape", {
+                Square: "square",
+                Circle: "circle",
+                Diamond: "diamond",
+                Cross: "cross",
+                Plus: "plus",
+              })
+              .name("pixelShape")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { pixelation: { pixelShape: value } },
+                });
+              });
+
+            pixelationFolder
+              .add(controls.effects.pixelation, "bitDepth", {
+                None: "none",
+                "1-bit": "1-bit",
+                "4-bit": "4-bit",
+                "8-bit": "8-bit",
+              })
+              .name("bitDepth")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { pixelation: { bitDepth: value } },
+                });
+              });
+
+            pixelationFolder
+              .add(controls.effects.pixelation, "dithering", {
+                None: "none",
+                "Floyd-Steinberg": "floyd-steinberg",
+                Bayer: "bayer",
+              })
+              .name("dithering")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { pixelation: { dithering: value } },
+                });
+              });
+
+            pixelationFolder
+              .add(controls.effects.pixelation, "pixelDirection", {
+                Square: "square",
+                Horizontal: "horizontal",
+                Vertical: "vertical",
+              })
+              .name("pixelDirection")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { pixelation: { pixelDirection: value } },
+                });
+              });
+
+            // CRT Effect
+            const crtFolder = gui.addFolder("CRT Effect");
+
+            crtFolder
+              .add(controls.effects.crt, "enabled")
+              .name("enabled")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { enabled: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "preset", {
+                "Consumer TV": "consumer-tv",
+                "Arcade Monitor": "arcade-monitor",
+                "Computer Monitor": "computer-monitor",
+                "Broadcast Monitor": "broadcast-monitor",
+              })
+              .name("preset")
+              .onChange((value) => {
+                glitchEffect.setCRTPreset(value);
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "scanlineIntensity", 0, 1.0, 0.01)
+              .name("scanlineIntensity")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { scanlineIntensity: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "scanlineThickness", 0.1, 2.0, 0.01)
+              .name("scanlineThickness")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { scanlineThickness: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "scanlineCount", 0, 1080, 1)
+              .name("scanlineCount")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { scanlineCount: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "brightness", 0.5, 5.0, 0.01)
+              .name("brightness")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { brightness: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "curvature", 0.0, 20.0, 0.1)
+              .name("curvature")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { curvature: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "phosphorGlow", 0.0, 2.0, 0.01)
+              .name("phosphorGlow")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { phosphorGlow: value } },
+                });
+              });
+
+            crtFolder
+              .add(
+                controls.effects.crt,
+                "chromaticAberration",
+                0.0,
+                0.01,
+                0.0001
+              )
+              .name("chromaticAberration")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { chromaticAberration: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "flicker")
+              .name("flicker ⚠️")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { flicker: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "flickerIntensity", 0.0, 3.0, 0.01)
+              .name("flickerIntensity")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { flickerIntensity: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "lineMovement")
+              .name("lineMovement")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { lineMovement: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "lineSpeed", 0.0, 5.0, 0.1)
+              .name("lineSpeed")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { lineSpeed: value } },
+                });
+              });
+
+            crtFolder
+              .add(controls.effects.crt, "lineDirection", {
+                Up: "up",
+                Down: "down",
+                Left: "left",
+                Right: "right",
+              })
+              .name("lineDirection")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { crt: { lineDirection: value } },
+                });
+              });
+
+            // Glitch Effect
+            const glitchFolder = gui.addFolder("Glitch Effect");
+
+            glitchFolder
+              .add(controls.effects.glitch, "enabled")
+              .name("enabled")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { enabled: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "rgbShift", 0, 0.003, 0.0001)
+              .name("rgbShift")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { rgbShift: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "digitalNoise", 0, 0.5, 0.01)
+              .name("digitalNoise")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { digitalNoise: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "lineDisplacement", 0, 0.1, 0.001)
+              .name("lineDisplacement")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { lineDisplacement: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "bitCrushDepth", 0, 32, 1)
+              .name("bitCrushDepth")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { bitCrushDepth: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "signalDropoutFreq", 0, 0.2, 0.001)
+              .name("signalDropoutFreq")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { signalDropoutFreq: value } },
+                });
+              });
+
+            glitchFolder
+              .add(
+                controls.effects.glitch,
+                "signalDropoutSize",
+                0.01,
+                0.5,
+                0.01
+              )
+              .name("signalDropoutSize")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { signalDropoutSize: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "syncErrorFreq", 0, 0.1, 0.001)
+              .name("syncErrorFreq")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { syncErrorFreq: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "syncErrorAmount", 0, 0.2, 0.001)
+              .name("syncErrorAmount")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { syncErrorAmount: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "interferenceSpeed", 0, 5, 0.1)
+              .name("interferenceSpeed")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { interferenceSpeed: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "interferenceIntensity", 0, 1, 0.01)
+              .name("interferenceIntensity")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { interferenceIntensity: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "frameGhostAmount", 0, 1, 0.01)
+              .name("frameGhostAmount")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { frameGhostAmount: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "stutterFreq", 0, 0.5, 0.01)
+              .name("stutterFreq")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { stutterFreq: value } },
+                });
+              });
+
+            glitchFolder
+              .add(controls.effects.glitch, "datamoshStrength", 0, 2, 0.01)
+              .name("datamoshStrength")
+              .onChange((value) => {
+                glitchEffect.updateOptions({
+                  effects: { glitch: { datamoshStrength: value } },
+                });
+              });
+          } else {
+            setTimeout(setupGUI, 100);
+          }
+        };
+
+        setTimeout(setupGUI, 200);
+      });
+    </script>
+
+    <!-- === DEMO ONLY - TOOLTIP === -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const addTooltip = (targetElement) => {
+          let tooltip = document.getElementById("lil-gui-tooltip");
+          if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.id = "lil-gui-tooltip";
+            tooltip.className = "lil-gui-tooltip";
+            document.body.appendChild(tooltip);
+          }
+
+          targetElement.addEventListener("mouseenter", () => {
+            tooltip.textContent = "Epilepsy Warning";
+            const rect = targetElement.getBoundingClientRect();
+            tooltip.style.top = `${rect.bottom + 8}px`;
+            tooltip.style.left = `${rect.left + rect.width / 2}px`;
+            tooltip.classList.add("visible");
+          });
+
+          targetElement.addEventListener("mouseleave", () => {
+            tooltip.classList.remove("visible");
+          });
+        };
+
+        const observer = new MutationObserver((mutationsList, observer) => {
+          const targetElement = document.querySelector("#lil-gui-name-37");
+          if (targetElement) {
+            addTooltip(targetElement);
+            observer.disconnect();
+          }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => observer.disconnect(), 5000);
+      });
+    </script>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-left">glitchGL - NaughtyDuk©</div>
+        <div class="footer-center">Pixelate, CRT, Glitch</div>
+        <div class="footer-right">
+          <a href="https://github.com/naughtyduk/glitchGL">GET A LICENSE</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
