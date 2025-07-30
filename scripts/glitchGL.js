@@ -1444,6 +1444,7 @@
         time: 0,
         needsRender: true,
         lastRenderTime: 0,
+        lastContainerAspect: null,
       });
 
       this.targetElements.set(instanceId, targetElement);
@@ -1542,6 +1543,9 @@
           systemData.element,
           systemData.options
         );
+
+        const rect = systemData.element.getBoundingClientRect();
+        systemData.lastContainerAspect = rect.width / rect.height;
       }
 
       const geometry = new THREE.PlaneGeometry(2, 2);
@@ -1703,7 +1707,15 @@
           pixelRatio: { value: rendererData.renderer.getPixelRatio() },
           intensity: { value: options.intensity || 1.0 },
           textureAspect: { value: textureAspect },
-          aspectCorrectionEnabled: { value: options.aspectCorrection === true },
+          aspectCorrectionEnabled: {
+            value:
+              options.aspectCorrection === true &&
+              !(
+                texture &&
+                texture.userData &&
+                texture.userData.objectFitHandled
+              ),
+          },
 
           pixelationEnabled: {
             value: options.effects.pixelation.enabled || false,
@@ -2406,6 +2418,17 @@
         texture.magFilter = THREE.LinearFilter;
         texture.format = THREE.RGBAFormat;
         texture.premultiplyAlpha = false;
+
+        const computedStyle = window.getComputedStyle(element);
+        const objectFit = computedStyle.objectFit || "fill";
+        texture.userData = {
+          objectFitHandled:
+            ["img", "video"].includes(element.tagName.toLowerCase()) &&
+            ["cover", "fill", "contain", "none", "scale-down"].includes(
+              objectFit
+            ),
+        };
+
         return texture;
       }
     }
@@ -2715,6 +2738,16 @@
           material.uniforms.resolution.value.set(rect.width, rect.height);
           if (rect.height > 0) {
             material.uniforms.aspect.value = rect.width / rect.height;
+
+            const texture = material.uniforms.u_texture.value;
+            if (
+              texture &&
+              texture.userData &&
+              texture.userData.objectFitHandled
+            ) {
+              const containerAspect = rect.width / rect.height;
+              material.uniforms.textureAspect.value = containerAspect;
+            }
           }
 
           const texture = material.uniforms.u_texture.value;
@@ -2818,6 +2851,44 @@
         renderer.setSize(rect.width, rect.height);
         if (systemData.is3D && systemData.elementTexture) {
           systemData.elementTexture.setSize(rect.width, rect.height);
+        }
+      }
+
+      if (
+        !systemData.is3D &&
+        systemData.elementTexture &&
+        systemData.elementTexture.userData &&
+        systemData.elementTexture.userData.objectFitHandled
+      ) {
+        const currentAspect = rect.width / rect.height;
+        const previousAspect = systemData.lastContainerAspect || currentAspect;
+
+        if (Math.abs(currentAspect - previousAspect) > 0.01) {
+          systemData.lastContainerAspect = currentAspect;
+
+          this.elementToTexture(systemData.element, systemData.options).then(
+            (newTexture) => {
+              if (systemData.elementTexture) {
+                systemData.elementTexture.dispose();
+              }
+              systemData.elementTexture = newTexture;
+
+              if (systemData.glitchMaterial) {
+                systemData.glitchMaterial.uniforms.u_texture.value = newTexture;
+                systemData.glitchMaterial.uniforms.textureAspect.value =
+                  currentAspect;
+                systemData.glitchMaterial.uniforms.aspectCorrectionEnabled.value =
+                  systemData.options.aspectCorrection === true &&
+                  !(
+                    newTexture &&
+                    newTexture.userData &&
+                    newTexture.userData.objectFitHandled
+                  );
+              }
+
+              systemData.needsRender = true;
+            }
+          );
         }
       }
 
@@ -3091,13 +3162,26 @@
         intrinsicH = rect.height;
       }
 
-      const aspect = intrinsicW / intrinsicH || 1;
-      if (aspect >= 1) {
-        canvasWidth = MAX_SIDE;
-        canvasHeight = Math.round(MAX_SIDE / aspect);
+      const rect = element.getBoundingClientRect();
+      const containerAspect = rect.width / rect.height;
+
+      if (tagName === "img" || tagName === "video") {
+        if (containerAspect >= 1) {
+          canvasWidth = MAX_SIDE;
+          canvasHeight = Math.round(MAX_SIDE / containerAspect);
+        } else {
+          canvasHeight = MAX_SIDE;
+          canvasWidth = Math.round(MAX_SIDE * containerAspect);
+        }
       } else {
-        canvasHeight = MAX_SIDE;
-        canvasWidth = Math.round(MAX_SIDE * aspect);
+        const aspect = intrinsicW / intrinsicH || 1;
+        if (aspect >= 1) {
+          canvasWidth = MAX_SIDE;
+          canvasHeight = Math.round(MAX_SIDE / aspect);
+        } else {
+          canvasHeight = MAX_SIDE;
+          canvasWidth = Math.round(MAX_SIDE * aspect);
+        }
       }
     } else {
       const rect = element.getBoundingClientRect();
