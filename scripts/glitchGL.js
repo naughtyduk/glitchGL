@@ -1363,13 +1363,13 @@
 
       document.addEventListener("mousemove", this.onMouseMove);
       document.addEventListener("touchstart", this.onTouchStart, {
-        passive: false,
+        passive: true,
       });
       document.addEventListener("touchmove", this.onTouchMove, {
-        passive: false,
+        passive: true,
       });
       document.addEventListener("touchend", this.onTouchEnd, {
-        passive: false,
+        passive: true,
       });
     }
 
@@ -2577,7 +2577,6 @@
     onTouchStart(event) {
       if (event.touches.length > 0) {
         const touch = event.touches[0];
-
         this.mouseVelocity = 0;
         this.lastMousePos.set(touch.clientX, touch.clientY);
         this.handleInteraction(touch);
@@ -2586,8 +2585,6 @@
 
     onTouchMove(event) {
       if (event.touches.length > 0) {
-        event.preventDefault();
-
         const touch = event.touches[0];
         this.handleInteraction(touch);
       }
