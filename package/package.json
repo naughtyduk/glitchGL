@@ -1,6 +1,6 @@
 {
   "name": "glitch-gl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Universal WebGL glitch, CRT, and pixelation effects.",
   "type": "module",
   "main": "./glitchGL.js",
@@ -14,7 +14,9 @@
   "files": [
     "glitchGL.js",
     "README.md",
-    "LICENCE.md"
+    "LICENCE.md",
+    "assets/glitchGL-npm-preview.gif",
+    "assets/try-it-out-npm.png"
   ],
   "dependencies": {
     "three": "^0.178.0"
