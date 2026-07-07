@@ -2,7 +2,7 @@
 
 <a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/naughtyduk/glitchGL/main/assets/glitchGL-npm-preview.gif" alt="glitchGL" width="100%" height="auto"></a>
 
-**v1.0.5**
+**v1.0.6**
 
 > [!NOTE]
 > `glitchGL` uses a dual licence model. It is **free for personal use**. `glitchGL` requires a licence for commercial use, see the [licensing section](#licence) for more details.
@@ -347,7 +347,7 @@ glitchEffect.cleanup();
 
 ## Licence
 
-`glitchGL` is released under a dual-licence model to support both personal and commercial use. For full details, please see the [LICENCE](./LICENCE.md) file.
+`glitchGL` is released under a dual-licence model to support both personal and commercial use. For full details, please see the [LICENCE](https://github.com/naughtyduk/glitchGL/blob/main/LICENCE.md) file.
 
 ### Personal Use
 
@@ -361,8 +361,8 @@ A paid commercial licence is required for any project that is commercial in natu
 
 **Single Licence:**<br>
 `For one commercial website or project.`<br><br>
-<a href="https://pay.naughtyduk.com/b/5kQ4gz6oqgELbNK9RH9sk0b" target="_blank" rel="noopener noreferrer"><img src="./assets/licence-btn.svg" alt="Get Licence Button"></a>
+<a href="https://pay.naughtyduk.com/b/5kQ4gz6oqgELbNK9RH9sk0b" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/naughtyduk/glitchGL/main/assets/get-licence-npm.png" alt="Get Licence" width="120"></a>
 
 **Extended Licence:**<br>
 `For up to five commercial projects.`<br><br>
-<a href="https://pay.naughtyduk.com/b/14A28r9ACgEL196bZP9sk0c" target="_blank" rel="noopener noreferrer"><img src="./assets/licence-btn.svg" alt="Get Licence Button"></a>
+<a href="https://pay.naughtyduk.com/b/14A28r9ACgEL196bZP9sk0c" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/naughtyduk/glitchGL/main/assets/get-licence-npm.png" alt="Get Licence" width="120"></a>
