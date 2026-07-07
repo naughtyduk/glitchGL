@@ -1,8 +1,8 @@
 # glitchGL – Universal WebGL Glitch Effects
 
-<a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="https://glitchgl.naughtyduk.com/assets/glitchGL-Promo-GIF.gif" alt="glitchGL" width="100%" height="auto"></a>
+<a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/naughtyduk/glitchGL/main/assets/glitchGL-Promo-GIF.gif" alt="glitchGL" width="100%" height="auto"></a>
 
-**v1.0.1**
+**v1.0.2**
 
 > [!NOTE]
 > `glitchGL` uses a dual licence model. It is **free for personal use**. `glitchGL` requires a licence for commercial use, see the [licensing section](#licence) for more details.
