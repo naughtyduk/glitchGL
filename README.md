@@ -2,7 +2,7 @@
 
 <a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="./assets/glitchGL-Promo-GIF.gif" alt="glitchGL" width="100%" height="auto"></a>
 
-**v1.0.3**
+**v1.0.4**
 
 > [!IMPORTANT]
 > `glitchGL` is now available on npm: `npm install glitch-gl`. The `package/` directory contains the npm package source and is not required when using the CDN/browser script.

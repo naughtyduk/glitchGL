@@ -1,15 +1,15 @@
 # glitchGL – Universal WebGL Glitch Effects
 
-<a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="./assets/glitchGL-npm-preview.gif?raw=true" alt="glitchGL" width="100%" height="auto"></a>
+<a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/naughtyduk/glitchGL/main/assets/glitchGL-npm-preview.gif" alt="glitchGL" width="100%" height="auto"></a>
 
-**v1.0.3**
+**v1.0.4**
 
 > [!NOTE]
 > `glitchGL` uses a dual licence model. It is **free for personal use**. `glitchGL` requires a licence for commercial use, see the [licensing section](#licence) for more details.
 
 `glitchGL` transforms any DOM element into a canvas of stunning, interactive glitch, CRT, and pixelation effects, rendered in high-performance WebGL.
 
-<a href="https://glitchgl.naughtyduk.com" target="_blank" rel="noopener noreferrer"><img src="./assets/try-it-out-npm.png?raw=true" alt="Try It Out" width="203"></a>
+<a href="https://glitchgl.naughtyduk.com" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/naughtyduk/glitchGL/main/assets/try-it-out-npm.png" alt="Try It Out" width="203"></a>
 
 <a href="https://glitchgl.naughtyduk.com/demos/demo-1.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (GLITCH)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-2.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (MULTIPLE)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-3.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (CRT)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-4.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (PIXELATION)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-5.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (3D MODEL)</strong></a>
 
