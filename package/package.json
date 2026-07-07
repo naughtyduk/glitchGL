@@ -1,0 +1,36 @@
+{
+  "name": "glitch-gl",
+  "version": "1.0.1",
+  "description": "Universal WebGL glitch, CRT, and pixelation effects.",
+  "type": "module",
+  "main": "./glitchGL.js",
+  "module": "./glitchGL.js",
+  "exports": {
+    ".": {
+      "import": "./glitchGL.js",
+      "default": "./glitchGL.js"
+    }
+  },
+  "files": [
+    "glitchGL.js",
+    "README.md",
+    "LICENCE.md"
+  ],
+  "dependencies": {
+    "three": "^0.178.0"
+  },
+  "keywords": [
+    "glitch",
+    "webgl",
+    "three",
+    "crt",
+    "pixelation",
+    "shader"
+  ],
+  "author": "NaughtyDuk",
+  "license": "SEE LICENCE.md",
+  "homepage": "https://glitchgl.naughtyduk.com",
+  "publishConfig": {
+    "access": "public"
+  }
+}

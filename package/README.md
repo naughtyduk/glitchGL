@@ -1,18 +1,15 @@
 # glitchGL – Universal WebGL Glitch Effects
 
-<a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="./assets/glitchGL-Promo-GIF.gif" alt="glitchGL" width="100%" height="auto"></a>
+<a href="https://glitchgl.naughtyduk.com/" target="_blank" rel="noopener noreferrer"><img src="https://glitchgl.naughtyduk.com/assets/glitchGL-Promo-GIF.gif" alt="glitchGL" width="100%" height="auto"></a>
 
 **v1.0.1**
-
-> [!IMPORTANT]
-> `glitchGL` is now available on npm: `npm install glitch-gl`. The `package/` directory contains the npm package source and is not required when using the CDN/browser script.
 
 > [!NOTE]
 > `glitchGL` uses a dual licence model. It is **free for personal use**. `glitchGL` requires a licence for commercial use, see the [licensing section](#licence) for more details.
 
 `glitchGL` transforms any DOM element into a canvas of stunning, interactive glitch, CRT, and pixelation effects, rendered in high-performance WebGL.
 
-<a href="https://glitchgl.naughtyduk.com" target="_blank" rel="noopener noreferrer"><img src="./assets/try-btn.svg" alt="Try It Out Button"></a>
+<a href="https://glitchgl.naughtyduk.com" target="_blank" rel="noopener noreferrer"><img src="https://glitchgl.naughtyduk.com/assets/try-btn.svg" alt="Try It Out Button"></a>
 
 <a href="https://glitchgl.naughtyduk.com/demos/demo-1.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (GLITCH)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-2.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (MULTIPLE)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-3.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (CRT)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-4.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (PIXELATION)</strong></a> | <a href="https://glitchgl.naughtyduk.com/demos/demo-5.html" target="_blank" rel="noopener noreferrer"><strong>DEMO (3D MODEL)</strong></a>
 
@@ -38,9 +35,27 @@
 
 ---
 
+## Install from npm
+
+```sh
+npm install glitch-gl
+```
+
+```js
+import glitchGL from "glitch-gl";
+
+const glitchEffect = glitchGL({
+  target: ".glitchGL",
+});
+```
+
+> `three` is installed automatically as a package dependency. `GLTFLoader` is only required when using 3D models.
+
+---
+
 ## Prerequisites
 
-Add the following scripts before you initialise `glitchGL()` (normally at the end of the `<body>`):
+For CDN/browser-script usage, add the following scripts before you initialise `glitchGL()` (normally at the end of the `<body>`):
 
 ```html
 <!-- Three.js – WebGL 3D library (required) -->
@@ -50,7 +65,7 @@ Add the following scripts before you initialise `glitchGL()` (normally at the en
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js"></script>
 
 <!-- glitchGL.min.js – the library itself -->
-<script src="/scripts/glitchGL.min.js"></script>
+<script src="https://glitchgl.naughtyduk.com/scripts/glitchGL.min.js"></script>
 ```
 
 > `Three.js` provides the WebGL rendering engine that powers `glitchGL`. The library will not work without Three.js. `GLTFLoader` is only required if you plan to use 3D models.
@@ -82,75 +97,75 @@ Set up your HTML structure first. Add the `glitchGL` class to any element you wa
 Next, initialise the library with your desired configuration.
 
 ```javascript
-document.addEventListener("DOMContentLoaded", () => {
-  const glitchEffect = glitchGL({
-    target: ".glitchGL",
-    intensity: 1.0, // Overall intensity of interactive effects
-    aspectCorrection: true,
-    modelScale: 1.0, // The global scale of any 3D models
-    tiltFactor: 0.2, // The intensity of tilt on 3d models
-    tiltSpeed: 0.05, // The speed of tilt relative to the cursor on 3D models
-    interaction: {
-      enabled: true, // Whether interaction effects are enabled
-      shape: "circle", // 'circle', 'square', 'diamond', 'cross', 'plus', 'custom'
-      customSize: "10vw", // Width of interaction shape
-      customUrl: null, // URL for custom SVG shape
-      velocity: false, // Whether the interaction shape scales with cursor movement
-      effects: {
-        // Specify which parameters of each effect are interactive
-        pixelation: [], // i.e ["pixelSize"]
-        crt: [], // i.e ["scanlineCount", "phosphorGlow", "curvature"] etc.
-        glitch: [], // i.e ["digitalNoise", "lineDisplacement", "bitCrushDepth"] etc.
-      },
-    },
+import glitchGL from "glitch-gl";
+
+const glitchEffect = glitchGL({
+  target: ".glitchGL",
+  intensity: 1.0, // Overall intensity of interactive effects
+  aspectCorrection: true,
+  modelScale: 1.0, // The global scale of any 3D models
+  tiltFactor: 0.2, // The intensity of tilt on 3d models
+  tiltSpeed: 0.05, // The speed of tilt relative to the cursor on 3D models
+  interaction: {
+    enabled: true, // Whether interaction effects are enabled
+    shape: "circle", // 'circle', 'square', 'diamond', 'cross', 'plus', 'custom'
+    customSize: "10vw", // Width of interaction shape
+    customUrl: null, // URL for custom SVG shape
+    velocity: false, // Whether the interaction shape scales with cursor movement
     effects: {
-      pixelation: {
-        enabled: true,
-        pixelSize: 8,
-        pixelShape: "square",
-        bitDepth: "none",
-        dithering: "none",
-        pixelDirection: "square",
-      },
-      crt: {
-        enabled: false,
-        preset: "consumer-tv",
-        scanlineIntensity: 0.7,
-        scanlineThickness: 0.8,
-        scanlineCount: 240,
-        brightness: 1.2,
-        phosphorGlow: 0.4,
-        curvature: 8.0,
-        chromaticAberration: 0.004,
-        flicker: false,
-        flickerIntensity: 0.5,
-        lineMovement: false,
-        lineSpeed: 1.0,
-        lineDirection: "up",
-      },
-      glitch: {
-        enabled: false,
-        rgbShift: 0,
-        digitalNoise: 0.1,
-        lineDisplacement: 0.01,
-        bitCrushDepth: 4.0,
-        signalDropoutFreq: 0.05,
-        signalDropoutSize: 0.1,
-        syncErrorFreq: 0.02,
-        syncErrorAmount: 0.05,
-        interferenceSpeed: 1.0,
-        interferenceIntensity: 0.2,
-        frameGhostAmount: 0.3,
-        stutterFreq: 0.1,
-        datamoshStrength: 0.5,
-      },
+      // Specify which parameters of each effect are interactive
+      pixelation: [], // i.e ["pixelSize"]
+      crt: [], // i.e ["scanlineCount", "phosphorGlow", "curvature"] etc.
+      glitch: [], // i.e ["digitalNoise", "lineDisplacement", "bitCrushDepth"] etc.
     },
-    on: {
-      init(instance) {
-        console.log("glitchGL ready!", instance);
-      },
+  },
+  effects: {
+    pixelation: {
+      enabled: true,
+      pixelSize: 8,
+      pixelShape: "square",
+      bitDepth: "none",
+      dithering: "none",
+      pixelDirection: "square",
     },
-  });
+    crt: {
+      enabled: false,
+      preset: "consumer-tv",
+      scanlineIntensity: 0.7,
+      scanlineThickness: 0.8,
+      scanlineCount: 240,
+      brightness: 1.2,
+      phosphorGlow: 0.4,
+      curvature: 8.0,
+      chromaticAberration: 0.004,
+      flicker: false,
+      flickerIntensity: 0.5,
+      lineMovement: false,
+      lineSpeed: 1.0,
+      lineDirection: "up",
+    },
+    glitch: {
+      enabled: false,
+      rgbShift: 0,
+      digitalNoise: 0.1,
+      lineDisplacement: 0.01,
+      bitCrushDepth: 4.0,
+      signalDropoutFreq: 0.05,
+      signalDropoutSize: 0.1,
+      syncErrorFreq: 0.02,
+      syncErrorAmount: 0.05,
+      interferenceSpeed: 1.0,
+      interferenceIntensity: 0.2,
+      frameGhostAmount: 0.3,
+      stutterFreq: 0.1,
+      datamoshStrength: 0.5,
+    },
+  },
+  on: {
+    init(instance) {
+      console.log("glitchGL ready!", instance);
+    },
+  },
 });
 ```
 
